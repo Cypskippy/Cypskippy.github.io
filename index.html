@@ -1,21 +1,77 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AccessoiresTech 2025</title>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9402824549128224"
-     crossorigin="anonymous"></script>
-</head>
-<body style="font-family:sans-serif;max-width:700px;margin:0 auto;padding:20px">
-  <h1>📱 Comparatifs AccessoiresTech 2025</h1>
-  <p>Bienvenue ! Voici nos derniers guides d'achat :</p>
-  <ul>
-    <li><a href="chargeurs.html">🔌 Chargeurs rapides USB-C pour iPhone et Android</a></li>
-    <li><a href="batteries.html">🔋 Batteries externes compactes et puissantes</a></li>
-    <li><a href="coques.html">📱 Coques de protection pour iPhone</a></li>
-    <li><a href="supports.html">🚗 Supports de smartphone pour voiture</a></li>
-  </ul>
-  <p style="margin-top:40px;font-size:14px;color:#666">© 2025 AccessoiresTech</p>
-</body>
-</html>
+---
+layout: page
+title: Accueil
+permalink: /
+---
+
+<!-- redirection temporaire : si tu la veux, garde-la en minuscules -->
+<meta http-equiv="refresh" content="0; url=/tips/">
+
+# Bienvenue sur Cyprien – Programmatic SEO
+
+(Repris 100 % à l’arrache : voici toutes les pages générées automatiquement !)
+
+<input type="text" id="search-input" placeholder="Rechercher une page…">
+<ul id="results-container"></ul>
+
+<script>
+  /* -- Base de données des pages pour la recherche -- */
+  const data = [
+    {%- for doc in site.tips -%}
+    {
+      "title": {{ doc.title       | jsonify }},
+      "url":   {{ doc.url         | jsonify }},
+      "excerpt": {{ doc.content   | strip_html | strip_newlines | truncate: 100 | jsonify }}
+    }{%- unless forloop.last -%},{% endunless -%}
+    {%- endfor -%}
+  ];
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const input   = document.getElementById("search-input");
+    const results = document.getElementById("results-container");
+
+    input.addEventListener("input", () => {
+      const q = input.value.toLowerCase();
+      results.innerHTML = "";
+      if (q.length < 2) return;
+
+      data
+        .filter(item =>
+          item.title.toLowerCase().includes(q) ||
+          item.excerpt.toLowerCase().includes(q)
+        )
+        .forEach(item => {
+          const li = document.createElement("li");
+          li.innerHTML = `<a href="${item.url}">${item.title}</a>`;
+          results.appendChild(li);
+        });
+    });
+  });
+</script>
+
+<style>
+  #results-container { list-style: none; padding: 0; margin-top: 10px; }
+  #results-container li { margin-bottom: 8px; }
+</style>
+
+<!-- ---------- Liste complète triée ----------- -->
+<ul>
+{% assign pages_tips = site.tips | sort: 'date' | reverse %}
+{% if pages_tips.size > 0 %}
+  {% for doc in pages_tips %}
+    <li>
+      <a href="{{ doc.url | relative_url }}">
+        {{ doc.date | date: "%Y-%m-%d" }} – {{ doc.title }}
+      </a>
+    </li>
+  {% endfor %}
+{% else %}
+  _Aucun article pour l’instant._
+{% endif %}
+</ul>
+
+<!-- ------------ Page aléatoire du jour ------------ -->
+{% if pages_tips.size > 0 %}
+  {% assign random_doc = pages_tips | sample %}
+  <p>Page du jour : <a href="{{ random_doc.url | relative_url }}">{{ random_doc.title }}</a></p>
+{% endif %}
